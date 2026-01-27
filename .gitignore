@@ -1,0 +1,7 @@
+# venv and vscode files
+.venv/
+.vscode/
+
+# setting and env files
+.env
+config.yaml
