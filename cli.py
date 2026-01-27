@@ -1,9 +1,14 @@
 import sys
+import yaml
 import importlib
 from src.logger import Logger
 
 
-log = Logger()._init_logger(__name__)
+with open('config.yaml', 'r') as f:
+    settings = yaml.safe_load(f)
+    print('INFO - [+] Configurações yaml carregadas.')
+
+log = Logger(settings=settings, name=__name__)._init_logger()
 
 def main():
     if len(sys.argv) < 2:

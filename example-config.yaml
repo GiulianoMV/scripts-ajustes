@@ -1,6 +1,6 @@
 app:
   name: contract_toolkit
-  env: prod
+  env: homlogacao
 
 defaults:
   log:

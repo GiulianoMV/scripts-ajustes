@@ -1,48 +1,29 @@
 import logging
 from logging.handlers import RotatingFileHandler
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Literal
 from pathlib import Path
 import yaml
 
 
 class Logger:
     def __init__(self,
+                 settings:Optional[Dict]=None,
                  logpath:Optional[str]=None,
                  max_sizefile:Optional[int]=None,
                  bkp_count:Optional[int]=None,
-                 loglevel:Optional[str]=None,
-                 console_display:bool=None,
+                 loglevel: Optional[Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]]=None,
+                 console_display:Optional[bool]=None,
                  name:Optional[str]=None):
         
-        self.settings = self._load_config_cached().get('defaults', {}).get('log', {})
+        self.settings = settings if settings is not None else {}
         self.logpath = Path(logpath) if logpath is not None else Path(self.settings.get('logpath', './logs'))
         self.max_sizefile = max_sizefile if max_sizefile is not None else self.settings.get('max_sizefile', 5)
         self.bkp_count = bkp_count if bkp_count is not None else self.settings.get('bkp_count', 5)
         self.loglevel = loglevel if loglevel is not None else self.settings.get('loglevel', 'INFO')
         self.console_display = console_display if console_display is not None else self.settings.get('console_display', True)
+        self.name = name
 
         self._validate_parameters()
-
-
-    @classmethod
-    def _load_config_cached(cls) -> Dict[str, Any]:
-        if cls.config_cache is None:
-            cls.config_cache = cls._load_config_file()
-        return cls.config_cache.copy()
-
-
-    @staticmethod
-    def _load_config_file() -> Dict[str, Any]:
-        config_path = Path('contract_toolkit/config.ymal')
-        if not config_path.exists():
-            return {}
-        
-        try:
-            with open(config_path, 'r') as settings:
-                return yaml.safe_load(settings) or {}
-        except (yaml.YAMLError, IOError) as e:
-            print(f'Erro ao ler config.ymal: {e}')
-            return {}
 
 
     def _validate_parameters(self):
@@ -50,20 +31,22 @@ class Logger:
             raise ValueError('max_filesize deve ser maior que 0.')
         if self.bkp_count <= 0:
             raise ValueError('bkp_count deve ser maior que 0.')
-        
+
         valid_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
         if self.loglevel not in valid_levels:
             raise ValueError(f'loglevel deve ser um de: {valid_levels}')
+        if self.name is None:
+            raise ValueError('name obrigatório, utilize __name__')
 
 
-    def _init_logger(self, name:str) -> logging.Logger:
+    def _init_logger(self) -> logging.Logger:
         self.logpath.mkdir(parents=True, exist_ok=True)
 
-        logger = logging.getLogger(name)
+        logger = logging.getLogger(self.name)
 
         if logger.handlers:
             return logger
-        
+
         logger.setLevel(self.loglevel)
         formatter = logging.Formatter(
             fmt="[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s",

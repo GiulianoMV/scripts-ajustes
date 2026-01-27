@@ -9,11 +9,9 @@ class Coleta_Contrato:
     def __init__(self,
                  input_path:Optional[str]=None,
                  output_path:Optional[str]=None):
-        
-        self.settings = self._load_config_cached().get('services', {}).get('coleta_contratos', {})
 
         self.entry = input_path if input_path is not None else self.settings.get('input_path', None)
-        
+
         pass
 
 
