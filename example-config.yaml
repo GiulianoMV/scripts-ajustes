@@ -1,0 +1,19 @@
+app:
+  name: contract_toolkit
+  env: prod
+
+defaults:
+  log:
+    logpath: ./logs
+    max_sizefile: 5
+    bkp_count: 5
+    loglevel: INFO
+    console_display: True
+
+services:
+  coleta_contratos:
+    client_id: user_id
+    client_secret: user_secret
+    url_token: auth_token_url
+    input_path: entry/coleta_contratos.csv
+    output_path: output/coleta_contratos.csv
