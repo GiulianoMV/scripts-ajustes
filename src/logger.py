@@ -21,7 +21,7 @@ class Logger:
         self.bkp_count = bkp_count if bkp_count is not None else self.settings.get('bkp_count', 5)
         self.loglevel = loglevel if loglevel is not None else self.settings.get('loglevel', 'INFO')
         self.console_display = console_display if console_display is not None else self.settings.get('console_display', True)
-        self.name = name
+        self.name = name if name is not None else __name__
 
         self._validate_parameters()
 
