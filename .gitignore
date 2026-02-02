@@ -5,3 +5,4 @@
 # setting and env files
 .env
 config.yaml
+__pycache__
