@@ -8,17 +8,21 @@ with open('config.yaml', 'r') as f:
     settings = yaml.safe_load(f)
     print('INFO - [+] Configurações yaml carregadas.')
 
-log = Logger(settings=settings, name=__name__)._init_logger()
+log = Logger(settings=settings.get('defaults', {}).get('log', {}), name=__name__)._init_logger()
 
 def main():
-    if len(sys.argv) < 2:
-        log.warning("[!] Uso: contract-toolkit <serviço> [args]")
+    if len(sys.argv) < 1:
+        log.warning("[!] Uso: contract-toolkit --service [args]")
+        log.warning("[!] Comandos: contract-toolkit --commands")
         sys.exit(1)
+    elif sys.argv[1]=="--commands":
+        log.info("[-] Lista de comandos disponíveis:")
+        log.info("[-] contract-toolkit --coleta_contratos")
+        sys.exit(0)
 
-    service = sys.argv[1]
-    args = sys.argv[2:]
+    service = str(sys.argv[1]).replace('--','')
 
-    module_path = f"contract_toolkit.src.services.{service}"
+    module_path = f"src.services.{service}"
 
     try:
         module = importlib.import_module(module_path)
@@ -26,7 +30,23 @@ def main():
         log.error(f"[!!] Serviço '{service}' não existe")
         sys.exit(2)
 
-    module.run(args)
+    if len(sys.argv) > 2:
+        args = sys.argv[2:]
+        if hasattr:
+            module.run(args)
+        elif hasattr(module, 'ColetaContratos'):
+            service_class = getattr(module, 'ColetaContratos')
+            service_instance = service_class(settings=settings.get('services', {}).get('coleta_contratos', {}))
+            service_instance.run()
+    else:
+        if hasattr(module, 'run'):
+            module.run()
+        else:
+            match service:
+                case "coleta_contrato":
+                    service_class = getattr(module, 'ColetaContratos')
+                    service_instance = service_class(settings=settings.get('services', {}).get('coleta_contratos', {}))
+                    service_instance.run()
 
 if __name__ == "__main__":
     main()

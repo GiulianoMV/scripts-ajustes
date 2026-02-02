@@ -119,11 +119,11 @@ class ColetaContratos:
             expires_in = token_data.get("expires_in", 3600)
             self._token_expiry = datetime.now().timestamp() + expires_in
 
-            self.log.info("Token de acesso obtido com sucesso")
+            self.log.info("[+] Token de acesso obtido com sucesso.")
             return self._access_token
 
-        except requests.exceptions.RequestException as e:
-            self.log.error(f"Erro ao obter token de acesso: {e}", exc_info=True)
+        except requests.exceptions.RequestException:
+            self.log.error(f"[!!] Erro ao obter token de acesso.", exc_info=True)
             return None
 
     def _get_headers(self) -> Dict[str, str]:
@@ -170,11 +170,11 @@ class ColetaContratos:
 
             return response.json()
 
-        except requests.exceptions.RequestException as e:
-            self.log.warning(f"Erro na requisição {method} para {url}: {e}")
+        except requests.exceptions.RequestException:
+            self.log.warning(f"[!] Erro na requisição {method} para {url}.")
             return None
-        except json.JSONDecodeError as e:
-            self.log.warning(f"Erro ao decodificar JSON da resposta de {url}: {e}")
+        except json.JSONDecodeError:
+            self.log.warning(f"[!] Erro ao decodificar JSON da resposta de {url}.")
             return None
 
     def _process_cnpj(self, cnpj: str) -> List[List[Any]]:
@@ -253,7 +253,7 @@ class ColetaContratos:
             max_workers: Número máximo de threads
             use_polars: Se True, usa Polars para leitura; se False, usa Pandas
         """
-        self.log.info(f"Iniciando processamento síncrono com {max_workers} workers")
+        self.log.info(f"[+] Iniciando processamento síncrono com {max_workers} workers.")
         inicio = time.time()
 
         # Lê o arquivo de entrada
@@ -261,16 +261,16 @@ class ColetaContratos:
             try:
                 df = pl.read_csv(self.input_path, separator=";")
                 cnpjs = df["CNPJ"].unique().to_list()
-                self.log.info(f"Lidos {len(cnpjs)} CNPJs únicos com Polars")
+                self.log.info(f"[+] Lidos {len(cnpjs)} CNPJs únicos com Polars.")
             except Exception as e:
-                self.log.error(f"Erro ao ler com Polars: {e}, tentando Pandas...")
+                self.log.error(f"[!!] Erro ao ler com Polars: {e}, tentando Pandas...")
                 df = pd.read_csv(self.input_path, sep=";")
                 cnpjs = df["CNPJ"].unique().tolist()
         else:
             df = pd.read_csv(self.input_path, sep=";")
             cnpjs = df["CNPJ"].unique().tolist()
 
-        self.log.info(f"Total de CNPJs únicos para processar: {len(cnpjs)}")
+        self.log.info(f"[+] Total de CNPJs únicos para processar: {len(cnpjs)}")
 
         # Processa com ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=min(max_workers, len(cnpjs))) as executor:
@@ -286,8 +286,8 @@ class ColetaContratos:
                     self.log.error(f"Erro ao processar CNPJ: {e}")
 
         tempo_total = time.time() - inicio
-        self.log.info(f"Processamento concluído em {tempo_total:.2f} segundos")
-        self.log.info(f"Total de contratos coletados: {len(self.contratos)}")
+        self.log.info(f"[+] Processamento concluído em {tempo_total:.2f} segundos")
+        self.log.info(f"T[+] otal de contratos coletados: {len(self.contratos)}")
 
     async def _process_cnpj_async(self, session: aiohttp.ClientSession, cnpj: str) -> List[List[Any]]:
         """
@@ -312,7 +312,7 @@ class ColetaContratos:
         Args:
             batch_size: Tamanho do lote para processamento assíncrono
         """
-        self.log.info(f"Iniciando processamento assíncrono com batch de {batch_size}")
+        self.log.info(f"[+] Iniciando processamento assíncrono com batch de {batch_size}")
 
         # Lê CNPJs (mesma lógica do process_sync)
         try:
@@ -324,7 +324,7 @@ class ColetaContratos:
 
         # Implementação assíncrona completa requer reescrita das funções de request
         # Para manter a simplicidade, usamos a versão síncrona por enquanto
-        self.log.warning("Processamento assíncrono não implementado, usando síncrono")
+        self.log.warning("[!] Processamento assíncrono não implementado, usando síncrono")
         self.process_sync()
 
     def save_results(self, format: str = "excel") -> None:
@@ -335,7 +335,7 @@ class ColetaContratos:
             format: Formato de saída (excel, csv, parquet)
         """
         if not self.contratos:
-            self.log.warning("Nenhum contrato para salvar")
+            self.log.warning("[!] Nenhum contrato para salvar")
             return
 
         colunas = [
@@ -353,15 +353,15 @@ class ColetaContratos:
         # Salva no formato especificado
         if format.lower() == "excel":
             df_resultado.write_excel(self.output_path)
-            self.log.info(f"Resultados salvos em Excel: {self.output_path}")
+            self.log.info(f"[+] Resultados salvos em Excel: {self.output_path}")
         elif format.lower() == "csv":
             csv_path = self.output_path.with_suffix(".csv")
             df_resultado.write_csv(csv_path)
-            self.log.info(f"Resultados salvos em CSV: {csv_path}")
+            self.log.info(f"[+] Resultados salvos em CSV: {csv_path}")
         elif format.lower() == "parquet":
             parquet_path = self.output_path.with_suffix(".parquet")
             df_resultado.write_parquet(parquet_path)
-            self.log.info(f"Resultados salvos em Parquet: {parquet_path}")
+            self.log.info(f"[+] Resultados salvos em Parquet: {parquet_path}")
         else:
             raise ValueError(f"Formato não suportado: {format}")
 
@@ -373,7 +373,7 @@ class ColetaContratos:
             method: Método de processamento (sync, async)
             **kwargs: Argumentos adicionais para o método de processamento
         """
-        self.log.info("Iniciando coleta de contratos")
+        self.log.info("[+] Iniciando coleta de contratos")
 
         try:
             if method.lower() == "async":
@@ -382,49 +382,8 @@ class ColetaContratos:
                 self.process_sync(**kwargs)
 
             self.save_results()
-            self.log.info("Coleta concluída com sucesso")
+            self.log.info("[+] Coleta concluída com sucesso")
 
         except Exception as e:
-            self.log.error(f"Erro durante a coleta: {e}", exc_info=True)
+            self.log.error(f"[!!] Erro durante a coleta: {e}", exc_info=True)
             raise
-
-
-# Função de conveniência para uso rápido
-def coletar_contratos(
-    input_path: str,
-    output_path: Optional[str] = None,
-    config_path: Optional[str] = None,
-    method: str = "sync",
-    **kwargs
-) -> None:
-    """
-    Função de conveniência para coleta de contratos.
-    
-    Args:
-        input_path: Caminho do arquivo de entrada
-        output_path: Caminho do arquivo de saída (opcional)
-        config_path: Caminho do arquivo de configuração (opcional)
-        method: Método de processamento (sync, async)
-        **kwargs: Argumentos adicionais para ColetaContratos
-    """
-    # Carrega configurações
-    settings = {}
-    if config_path and Path(config_path).exists():
-        try:
-            with open(config_path, 'r') as f:
-                if config_path.endswith('.yaml') or config_path.endswith('.yml'):
-                    settings = yaml.safe_load(f)
-                elif config_path.endswith('.json'):
-                    settings = json.load(f)
-        except Exception as e:
-            print(f"Erro ao carregar configurações: {e}")
-    
-    # Inicializa e executa
-    coletor = ColetaContratos(
-        input_path=input_path,
-        output_path=output_path,
-        settings=settings,
-        **kwargs
-    )
-    
-    coletor.run(method=method)
