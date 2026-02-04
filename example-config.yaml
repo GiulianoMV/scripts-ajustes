@@ -17,3 +17,10 @@ services:
     url_token: auth_token_url
     input_path: entry/coleta_contratos.csv
     output_path: output/coleta_contratos.csv
+
+  isenta_contratos:
+    url_get: get_old_negociation_url
+    url_put: put_new_negociation_url
+    valor: 0
+    input_path: entry/isenta_contratos.csv
+    output_path: output/isenta_contratos.xlsx
