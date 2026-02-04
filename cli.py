@@ -38,6 +38,10 @@ def main():
             service_class = getattr(module, 'ColetaContratos')
             service_instance = service_class(settings=settings.get('services', {}).get('coleta_contratos', {}))
             service_instance.run()
+        elif hasattr(module, "IsentaContratos"):
+            service_class = getattr(module, "IsentaContratos")
+            service_instance = service_class(settings=settings.get("services", {}).get("isenta_contratos", {}))
+            service_instance.run()
     else:
         if hasattr(module, 'run'):
             module.run()
@@ -46,6 +50,11 @@ def main():
                 case "coleta_contrato":
                     service_class = getattr(module, 'ColetaContratos')
                     service_instance = service_class(settings=settings.get('services', {}).get('coleta_contratos', {}))
+                    service_instance.run()
+
+                case "isenta_contrato":
+                    service_class = getattr(module, "IsentaContratos")
+                    service_instance = service_class(settings=settings.get("services", {}).get("isenta_contratos", {}))
                     service_instance.run()
 
 if __name__ == "__main__":
