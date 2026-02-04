@@ -21,9 +21,9 @@ from src.logger import Logger
 class ColetaContratos:
     def __init__(
         self,
-        input_path: Optional[str] = None,
-        output_path: Optional[str] = None,
-        settings: Optional[Dict[str, Any]] = None
+        input_path:Optional[str]=None,
+        output_path:Optional[str]=None,
+        settings:Optional[Dict[str, Any]]=None
     ):
         """
         Inicializa a classe de coleta de contratos.
@@ -143,7 +143,7 @@ class ColetaContratos:
             "client_id": self.settings["client_id"]
         }
 
-    def _make_request(self, url: str, method: str = "GET", **kwargs) -> Optional[Dict[str, Any]]:
+    def _make_request(self, url:str, method:str="GET", **kwargs) -> Optional[Dict[str, Any]]:
         """
         Faz uma requisição HTTP com tratamento de erros.
 
@@ -177,7 +177,7 @@ class ColetaContratos:
             self.log.warning(f"[!] Erro ao decodificar JSON da resposta de {url}.")
             return None
 
-    def _process_cnpj(self, cnpj: str) -> List[List[Any]]:
+    def _process_cnpj(self, cnpj:str) -> List[List[Any]]:
         """
         Processa um único CNPJ e retorna seus contratos.
 
@@ -245,7 +245,7 @@ class ColetaContratos:
 
         return contratos_cnpj
 
-    def process_sync(self, max_workers: int = 10, use_polars: bool = True) -> None:
+    def process_sync(self, max_workers:int=10, use_polars:bool=True) -> None:
         """
         Processa os dados de forma síncrona com threads.
         
@@ -289,7 +289,7 @@ class ColetaContratos:
         self.log.info(f"[+] Processamento concluído em {tempo_total:.2f} segundos")
         self.log.info(f"T[+] otal de contratos coletados: {len(self.contratos)}")
 
-    async def _process_cnpj_async(self, session: aiohttp.ClientSession, cnpj: str) -> List[List[Any]]:
+    async def _process_cnpj_async(self, session:aiohttp.ClientSession, cnpj:str) -> List[List[Any]]:
         """
         Processa um CNPJ de forma assíncrona.
 
@@ -305,7 +305,7 @@ class ColetaContratos:
         # Por brevidade, mantemos a versão síncrona aqui
         return self._process_cnpj(cnpj)
 
-    async def process_async(self, batch_size: int = 50) -> None:
+    async def process_async(self, batch_size:int=50) -> None:
         """
         Processa os dados de forma assíncrona.
 
@@ -327,7 +327,7 @@ class ColetaContratos:
         self.log.warning("[!] Processamento assíncrono não implementado, usando síncrono")
         self.process_sync()
 
-    def save_results(self, format: str = "excel") -> None:
+    def save_results(self, format:str="excel") -> None:
         """
         Salva os resultados coletados.
 
@@ -365,7 +365,7 @@ class ColetaContratos:
         else:
             raise ValueError(f"Formato não suportado: {format}")
 
-    def run(self, method: str = "sync", **kwargs) -> None:
+    def run(self, method:str="sync", **kwargs) -> None:
         """
         Executa o fluxo completo de coleta.
 
