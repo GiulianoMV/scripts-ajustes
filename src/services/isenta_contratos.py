@@ -83,6 +83,7 @@ class IsentaContratos:
         Args:
             url: URL da requisição
             method: Método HTTP (GET, PUT, etc.)
+            payload: Informações enviadas na requisição (Opcional)
             **kwargs: Argumentos adicionais para requests
 
         Returns:
