@@ -146,6 +146,7 @@ class IsentaContratos:
         
         Args:
             max_workers: Número máximo de threads
+            use_polars: Check para o uso da lib Polars no lugar da lib Pandas
         """
         self.log.info(f"[+] Iniciando processamento síncrono com {max_workers} threads.")
         inicio = time.time()
@@ -176,8 +177,8 @@ class IsentaContratos:
                     self.log.error("[!!] Erro ao processar contrato.", exc_info=True)
 
         tempo_total = time.time() - inicio
-        self.log.log(f"[+] Processamento concluído em {tempo_total:.2f} segundos.")
-        self.log.log(f"[+] Total de negociações alteradas: {len(self.contratos)}")
+        self.log.info(f"[+] Processamento concluído em {tempo_total:.2f} segundos.")
+        self.log.info(f"[+] Total de negociações alteradas: {len(self.contratos)}")
 
     async def _process_contract_async(self, session:aiohttp.ClientSession, contract:str) -> List[List[Any]]:
         """
