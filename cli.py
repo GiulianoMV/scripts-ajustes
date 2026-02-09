@@ -18,6 +18,8 @@ def main():
     elif sys.argv[1]=="--commands":
         log.info("[-] Lista de comandos disponíveis:")
         log.info("[-] contract-toolkit --coleta_contratos")
+        log.info("[-] contract-toolkit --isenta_contratos")
+        log.info("[-] contract-toolkit --reativa_contratos")
         sys.exit(0)
 
     service = str(sys.argv[1]).replace('--','')
@@ -42,6 +44,10 @@ def main():
             service_class = getattr(module, "IsentaContratos")
             service_instance = service_class(settings=settings.get("services", {}).get("isenta_contratos", {}))
             service_instance.run()
+        elif hasattr(module, "ReativaContrato"):
+            service_class = getattr(module, "ReativaContrato")
+            service_instance = service_class(settings=settings.get("service", {}).get("reativa_contratos", {}))
+            service_instance.run()
     else:
         if hasattr(module, 'run'):
             module.run()
@@ -51,10 +57,13 @@ def main():
                     service_class = getattr(module, 'ColetaContratos')
                     service_instance = service_class(settings=settings.get('services', {}).get('coleta_contratos', {}))
                     service_instance.run()
-
                 case "isenta_contrato":
                     service_class = getattr(module, "IsentaContratos")
                     service_instance = service_class(settings=settings.get("services", {}).get("isenta_contratos", {}))
+                    service_instance.run()
+                case "reativa_contrato":
+                    service_class = getattr(module, "ReativaContrato")
+                    service_instance = service_class(settings=settings.get("service", {}).get("reativa_contratos", {}))
                     service_instance.run()
 
 if __name__ == "__main__":
