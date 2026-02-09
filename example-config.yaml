@@ -24,3 +24,11 @@ services:
     valor: 0
     input_path: entry/isenta_contratos.csv
     output_path: output/isenta_contratos.xlsx
+
+  reativa_contratos:
+    url_get_contrato: get_old_contract_url
+    url_put_contrato: put_new_contract_url
+    url_get_equip: get_old_equip_url
+    url_put_equip: put_new_equip_url
+    input_path: entry/reativa_contratos.csv
+    output_path: output/reativa_contratos.xlsx
