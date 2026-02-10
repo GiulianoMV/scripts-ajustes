@@ -67,7 +67,7 @@ class IsentaContratos:
         if not self.input_path or not self.input_path.exists:
             raise ValueError(f"input_path deve conter um caminho válido: {self.input_path}")
 
-        required_settings = ["url_get", "url_put", "valor"]
+        required_settings = ["url_get_neg", "url_put_neg", "valor"]
         for setting in required_settings:
             if not self.settings.get(setting):
                 raise ValueError(f"{setting} não definido nas configurações.")
@@ -118,9 +118,9 @@ class IsentaContratos:
         negociacoes_contrato = []
 
         # Primeiro request: coleta de negociações
-        url_get = f"{self.settings.get("url_get")}{contract}"
+        url_get_neg = f"{self.settings.get("url_get_neg")}{contract}"
 
-        response_contract = self._make_request(url_get, method="GET")
+        response_contract = self._make_request(url_get_neg, method="GET")
         if not response_contract or not isinstance(response_contract, list) or len(response_contract) == 0:
             negociacoes_contrato.append([
                 contract, "Não localizado negociações.", "Não alterado.", "Não alterado."
@@ -129,7 +129,7 @@ class IsentaContratos:
         for negociacao in response_contract:
             # Segundo request: atualização de negociação com novo valor
             negociacao["vlNegociacao"] = self.settings.get("valor")
-            response_negociacao = self._make_request(url=self.settings.get("url_put"), method="PUT", payload=negociacao)
+            response_negociacao = self._make_request(url=self.settings.get("url_put_neg"), method="PUT", payload=negociacao)
             if not response_negociacao:
                 negociacoes_contrato.append([
                     contract, negociacao.get("cdContratoNegociacao", None), negociacao.get("vlNegociacao", None), "Não alterado."

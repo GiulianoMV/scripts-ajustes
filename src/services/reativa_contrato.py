@@ -56,7 +56,7 @@ class ReativaContrato:
         self.session.mount("http://", adapter)
 
         # Resultados
-        self.contratos = List[list[any]]=[]
+        self.contratos = List[List[Any]]=[]
 
         # Validação de informações iniciadas
         self._validate_parameters()
@@ -65,13 +65,13 @@ class ReativaContrato:
     def _validate_parameters(self) -> None:
         """Valida parâmetros obrigatórios."""
         if not self.input_path or not self.input_path.exists:
-            raise ValueError(f"input_path deve conter um vaminho válido: {self.input_path}")
+            raise ValueError(f"input_path deve conter um caminho válido: {self.input_path}")
 
         required_settings = ["url_get_contrato", "url_get_equip",
                              "url_put_contrato", "url_put_equp"]
-        for setting in required_settings:
-            if not self.settings.get(setting):
-                raise ValueError(f"{setting} não definido nas configurações.")
+        # for setting in required_settings:
+        #     if not self.settings.get(setting):
+        #         raise ValueError(f"{setting} não definido nas configurações.")
 
     def _ensure_output_directory(self) -> None:
         """Garante que o caminho de saída exsita"""
@@ -112,7 +112,7 @@ class ReativaContrato:
         Processa um único contrato e retorna seu status já reativado.
 
         Args:
-            contract: Contrato a ser reativado
+            row: Tupla contendo informações de EC, contrato e serial.
         
         Returns:
             Lista com status dos contratos alterados.
