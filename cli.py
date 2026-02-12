@@ -48,6 +48,14 @@ def main():
             service_class = getattr(module, "ReativaContrato")
             service_instance = service_class(settings=settings.get("service", {}).get("reativa_contratos", {}))
             service_instance.run()
+        elif hasattr(module, "MassiveCancel"):
+            service_class = getattr(module, "MassiveCancel")
+            service_instance = service_class(settings=settings.get("services", {}).get("massive_cancel", {}))
+            service_instance.run()
+        elif hasattr(module, "MassiveDesc"):
+            service_class = getattr(module, "MassiveDesc")
+            service_instance = service_class(settings=settings.get("services", {}).get("massive_desc", {}))
+            service_instance.run()
     else:
         if hasattr(module, 'run'):
             module.run()
@@ -64,6 +72,14 @@ def main():
                 case "reativa_contrato":
                     service_class = getattr(module, "ReativaContrato")
                     service_instance = service_class(settings=settings.get("service", {}).get("reativa_contratos", {}))
+                    service_instance.run()
+                case "massive_cancel":
+                    service_class = getattr(module, "MassiveCancel")
+                    service_instance = service_class(settings=settings.get("services", {}).get("massive_cancel", {}))
+                    service_instance.run()
+                case "massive_desc":
+                    service_class = getattr(module, "MassiveDesc")
+                    service_instance = service_class(settings=settings.get("services", {}).get("massive_desc", {}))
                     service_instance.run()
 
 if __name__ == "__main__":
