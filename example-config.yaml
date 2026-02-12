@@ -32,3 +32,24 @@ services:
     url_put_equip: put_new_equip_url
     input_path: entry/reativa_contratos.csv
     output_path: output/reativa_contratos.xlsx
+
+   massive_cancel:
+    requests_url:
+      url_get_contrato: url_get_contrato
+      url_put_contrato: url_put_contrato
+      url_get_contrato_equip: url_get_contrato_equip
+      url_put_contrato_equip: url_put_contrato_equip
+      url_get_neg: url_get_neg
+      url_put_neg: url_put_neg
+      url_get_protocol: url_get_protocol
+      url_put_protocol: url_put_protocol
+    paths:
+      input_path: entry/massive_cancel.csv
+      output_path: output/massive_cancel.xlsx
+
+  massive_desc:
+    requests_url:
+      url_desc: url_desc
+    paths:
+      input_path: entry/massive_cancel.csv
+      output_path: output/massive_cancel.xlsx
