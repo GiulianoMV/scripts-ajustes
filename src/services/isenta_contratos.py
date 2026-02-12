@@ -105,7 +105,7 @@ class IsentaContratos:
             self.log.warning("[!] Erro na requisição.", exc_info=True)
             return None
 
-    def _process_contract(self, contract:str) -> list[list[Any]]:
+    def _process_contract(self, contract:str) -> List[List[Any]]:
         """
         Processa um único contrato e retorna todas as suas negociações.
 
