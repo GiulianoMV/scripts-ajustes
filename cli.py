@@ -12,18 +12,18 @@ log = Logger(settings=settings.get('defaults', {}).get('log', {}), name=__name__
 
 def main():
     if len(sys.argv) < 1:
-        log.warning("[!] Uso: contract-toolkit --service [args]")
-        log.warning("[!] Comandos: contract-toolkit --commands")
+        log.warning("[!] Uso: python cli --service")
         sys.exit(1)
     elif sys.argv[1]=="--commands":
-        log.info("[-] Lista de comandos disponíveis:")
+        log.info("[-] Lista de serviços disponíveis:")
         log.info("[-] contract-toolkit --coleta_contratos")
         log.info("[-] contract-toolkit --isenta_contratos")
         log.info("[-] contract-toolkit --reativa_contratos")
+        log.info("[-] contract-toolkit --massive_cancel")
+        log.info("[-] contract-toolkit --massive_desc")
         sys.exit(0)
 
     service = str(sys.argv[1]).replace('--','')
-
     module_path = f"src.services.{service}"
 
     try:
