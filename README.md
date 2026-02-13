@@ -18,9 +18,11 @@ Manter público um compilado de scripts auxiliares para ajustes de contratos uti
 
 - **Python 3.11+**
 - **Polars**
+- **Pandas**
 - **APIs**
 - **JSON**
 - **Requisições HTTP**
+- **Multithread**
 
 ---
 
