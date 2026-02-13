@@ -51,5 +51,5 @@ services:
     requests_url:
       url_desc: url_desc
     paths:
-      input_path: entry/massive_cancel.csv
-      output_path: output/massive_cancel.xlsx
+      input_path: entry/massive_desc.csv
+      output_path: output/massive_desc.xlsx
