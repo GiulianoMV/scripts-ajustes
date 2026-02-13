@@ -138,5 +138,5 @@ Consulte LICENSE para mais detalhes.
 ## Contato
 
 Giuliano Vieira<br>
-E-mail: gmossv603@gmail.com
+E-mail: gmossv603@gmail.com<br>
 LinkedIn: https://www.linkedin.com/in/giuliano-vieira1/
