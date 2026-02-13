@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Status](https://img.shields.io/badge/status-Em%20Desenvolvimento-yellow.svg)
 
-Compilado de scripts auxiliares usados para ajustes contratuais utilizando endpoints HTTP (GET, PUT e POST) para alteração direto no banco de dados contratual.
+Compilado de scripts auxiliares usados para ajustes contratuais utilizando endpoints HTTP (GET, PUT) para alteração direto no banco de dados contratual.
 
 ---
 
